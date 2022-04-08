@@ -50,10 +50,12 @@ const dinner: Dinner = {
 
     organize(array) {
         this.shuffle(array);
-        let ob: Member = array.filter((member: Member) => (member.group === 'ob'))[0];
-        let yb: Member = array.filter((member: Member) => (member.group ==='yb'))[0];
-        let dinnerMember: string[] = [ob.name, yb.name];
+        const ob: Member = array.filter((member: Member) => (member.group === 'ob'))[0];
+        const yb: Member = array.filter((member: Member) => (member.group ==='yb'))[0];
+        const dinnerMember: string[] = [ob.name, yb.name];
        
         console.log(`오늘의 저녁 식사 멤버는 ${dinnerMember[0]}, ${dinnerMember[1]}입니다.`);
     }
 };
+
+dinner.organize(dinner.member);
