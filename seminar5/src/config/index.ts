@@ -29,5 +29,5 @@ export default {
   /**
    * jwt Algorithm
    */
-  jwtAlgo: process.env.JWT_ALGO as string
+  jwtAlgo: process.env.JWT_ALGO as string,
 };

@@ -1,3 +1,3 @@
 export interface MovieCommentUpdateDto {
-    comment: string;
+  comment: string;
 }

@@ -1,4 +1,4 @@
 export interface MovieCommentCreateDto {
-    writer: string;
-    comment: string;
+  writer: string;
+  comment: string;
 }
