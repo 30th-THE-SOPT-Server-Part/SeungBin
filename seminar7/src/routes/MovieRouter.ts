@@ -5,6 +5,8 @@ import auth from "../middlewares/auth";
 
 const router: Router = Router();
 
+router.get("/", MovieController.getMoviesBySearch);
+
 router.post(
   "/",
   [body("title").notEmpty(), body("director").notEmpty()],
@@ -25,7 +27,5 @@ router.put(
   auth,
   MovieController.updateMovieComment
 );
-
-router.get("/", MovieController.getMoviesBySearch);
 
 export default router;

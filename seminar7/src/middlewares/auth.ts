@@ -9,7 +9,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   // request-header 에서 토큰 받아오기
   const token = req.headers["authorization"]?.split(" ").reverse()[0];
 
-  // 토큰 유무 검증
+  // 토큰 유뮤 검증
   if (!token) {
     return res
       .status(statusCode.UNAUTHORIZED)
@@ -23,7 +23,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     req.body.user = (decoded as any).user;
 
     next();
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     if (error.name === "TokenExpiredError") {
       return res

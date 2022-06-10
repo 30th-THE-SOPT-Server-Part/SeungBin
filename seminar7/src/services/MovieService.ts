@@ -6,9 +6,9 @@ import { MovieCreateDto } from "../interfaces/movie/MovieCreateDto";
 import { MovieCommentInfo, MovieInfo } from "../interfaces/movie/MovieInfo";
 import { MovieOptionType } from "../interfaces/movie/MovieOptionType";
 import { MovieResponseDto } from "../interfaces/movie/MovieResponseDto";
-import Movie from "../models/Movie";
 import { MoviesResponseDto } from "../interfaces/movie/MoviesResponseDto";
-
+import Movie from "../models/Movie";
+import { isValidObjectId } from "../modules/checkObjectIdValid";
 const createMovie = async (
   movieCreateDto: MovieCreateDto
 ): Promise<PostBaseResponseDto> => {
@@ -33,8 +33,12 @@ const createMovieComment = async (
   movieCommentCreateDto: MovieCommentCreateDto
 ): Promise<MovieInfo | null> => {
   try {
+    const check = isValidObjectId(movieId);
+    if (!check) return null;
+
     const movie = await Movie.findById(movieId);
     if (!movie) return null;
+
     const newComments: MovieCommentInfo[] = [
       ...movie.comments,
       movieCommentCreateDto,
@@ -56,10 +60,7 @@ const createMovieComment = async (
 
 const getMovie = async (movieId: string): Promise<MovieResponseDto | null> => {
   try {
-    const movie = await Movie.findById(movieId).populate(
-      "comments.writer",
-      "name"
-    );
+    const movie = await Movie.findById(movieId).populate("comments.writer");
     if (!movie) return null;
 
     return movie;
@@ -73,7 +74,7 @@ const updateMovieComment = async (
   movieId: string,
   commentId: string,
   userId: string,
-  commentUpdateDto: MovieCommentUpdateDto
+  movieCommentUpdateDto: MovieCommentUpdateDto
 ): Promise<MovieInfo | null> => {
   try {
     const movie = await Movie.findById(movieId);
@@ -87,7 +88,7 @@ const updateMovieComment = async (
       {
         $set: {
           "comments.$.writer": userId,
-          "comments.$.comment": commentUpdateDto.comment,
+          "comments.$.comment": movieCommentUpdateDto.comment,
         },
       },
       { new: true }
@@ -126,8 +127,8 @@ const getMoviesBySearch = async (
     } else {
       movies = await Movie.find({
         $or: [
-          { title: { $regex: titleRegex } },
           { director: { $regex: titleRegex } },
+          { title: { $regex: titleRegex } },
         ],
       })
         .sort({ createdAt: -1 })
